@@ -40,18 +40,33 @@ app.use(function validateBearerToken(req, res, next) {
     }
 
     if (type === "genre") {
+        if (typeof string != 'string') {
+            return res
+            .status(400)
+            .send("You must enter a string value when doing a genre search");
+        }
         response = MOVIES.map(movie => {
             if (movie.genre.toLowerCase() === search.toLowerCase()) return movie;
         });
     }
 
     if (type === "country") {
+        if (typeof string != 'string') {
+            return res
+            .status(400)
+            .send("You must enter a string value when doing a country search");
+        }
         response = MOVIES.map(movie => {
             if (movie.country.toLowerCase() === search.toLowerCase()) return movie;
         });
     }
 
     if (type === "rating") {
+        if (isNaN(search)) {
+            return res
+            .status(400)
+            .send("You must enter a numeric value when doing a rating search");
+        }
         response = MOVIES.map(movie => {
             if (movie.avg_vote >= search) return movie;
         });
