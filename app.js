@@ -40,7 +40,7 @@ app.use(function validateBearerToken(req, res, next) {
     }
 
     if (type === "genre") {
-        if (typeof string != 'string') {
+        if (isNaN(search) !== true) {
             return res
             .status(400)
             .send("You must enter a string value when doing a genre search");
@@ -51,7 +51,7 @@ app.use(function validateBearerToken(req, res, next) {
     }
 
     if (type === "country") {
-        if (typeof string != 'string') {
+        if (isNaN(search) !== true) {
             return res
             .status(400)
             .send("You must enter a string value when doing a country search");
