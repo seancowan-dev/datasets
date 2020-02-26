@@ -14,7 +14,7 @@ app.use(cors());
 
 app.use(function validateBearerToken(req, res, next) {
     const apiToken = process.env.AUTH;
-    const authToken = req.query.auth;
+    const authToken = req.headers.authorization;
   
     if (!authToken || authToken.split(' ')[1] !== apiToken) {
       return res.status(401).send({ error: `api: ${apiToken} auth: ${authToken}` });
