@@ -9,12 +9,6 @@ describe('GET /movies', () => {
         .expect(401)
     });
 
-    it('Should return 400 if no search query is provided', () => {
-        return supertest(app)
-        .get(`/movies?auth=Bearer 72833bc0-5815-11ea-8e2d-0242ac130003&type=genre`)
-        .expect(400)
-    });
-
     it('Should return 400 if no search type is provided', () => {
         return supertest(app)
         .get(`/movies?auth=Bearer 72833bc0-5815-11ea-8e2d-0242ac130003&search=japan`)

@@ -25,54 +25,78 @@ app.use(function validateBearerToken(req, res, next) {
 
   app.get('/movies', (req, res) => {
     let response = [];
-    const { type, search } = req.query;
+    const { genre, country, rating, search } = req.query;
 
-    if (!search) {
+    if (!genre && !country && !rating && !search) {
         return res
         .status(400)
-        .send("Must supply a search query.");
+        .send("Cannot search without any query parameters.");
     }
 
-    if (!type) {
-        return res
-        .status(400)
-        .send("Must supply a type of search to perform, choose genre, country, or rating.");
+    if (search) {
+        if (isNaN(search !== true)) {
+            return res
+            .status(400)
+            .send("You must enter a string value when doing a title search");
+        }
+        response = MOVIES.filter(movie => {
+            return movie.film_title.toLowerCase().includes(search.toLowerCase());
+        })
     }
 
-    if (type === "genre") {
-        if (isNaN(search) !== true) {
+    if (genre) {
+        if (isNaN(genre) !== true) {
             return res
             .status(400)
             .send("You must enter a string value when doing a genre search");
         }
-        response = MOVIES.map(movie => {
-            if (movie.genre.toLowerCase() === search.toLowerCase()) return movie;
+        if (response.length > 0) {
+        response = response.filter(movie => {
+            return movie.genre.toLowerCase() === genre.toLowerCase();
+        }); 
+        } else {
+        response = MOVIES.filter(movie => {
+            return movie.genre.toLowerCase() === genre.toLowerCase();
         });
+        }
     }
 
-    if (type === "country") {
-        if (isNaN(search) !== true) {
+    if (country) {
+        if (isNaN(country) !== true) {
             return res
             .status(400)
             .send("You must enter a string value when doing a country search");
         }
-        response = MOVIES.map(movie => {
-            if (movie.country.toLowerCase() === search.toLowerCase()) return movie;
+        if (response.length > 0) {
+        response = response.filter(movie => {
+            return movie.country.toLowerCase() === country.toLowerCase();
         });
+        } else {
+        response = MOVIES.filter(movie => {
+            return movie.country.toLowerCase() === country.toLowerCase();
+        });
+        }
+
     }
 
-    if (type === "rating") {
-        if (isNaN(search)) {
+    if (rating) {
+        if (isNaN(rating)) {
             return res
             .status(400)
             .send("You must enter a numeric value when doing a rating search");
         }
-        response = MOVIES.map(movie => {
-            if (movie.avg_vote >= search) return movie;
+        if (response.length > 0) {
+        response = response.filter(movie => {
+            return movie.avg_vote >= rating;
         });
+        } else {
+        response = MOVIES.filter(movie => {
+            return movie.avg_vote >= rating;
+        });
+        }
     }
 
-    res.json(response.filter(elem => {return elem != null}));
+    res.json(response);
   });
 
 module.exports = app;
